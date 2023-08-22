@@ -45,9 +45,9 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 		}
 		unique, m := utils.GetUnique(lines)
 		if showStats {
-			fmt.Println("Total entries:", len(lines))
-			fmt.Println("Total unique entries:", len(unique))
-			fmt.Println("Total duplicate entries:", len(lines)-len(unique))
+			fmt.Println("Entries:", len(lines))
+			fmt.Println("Unique entries:", len(unique))
+			fmt.Println("Duplicate entries:", len(lines)-len(unique))
 		}
 		if showCount || showPercent {
 			for k, count := range m {
