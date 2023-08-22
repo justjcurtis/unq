@@ -28,13 +28,12 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 		if len(lines) == 1 {
 			lines = strings.Split(lines[0], delimiter)
 		} else {
-			if delimiter != "\n" {
-				for i, line := range lines {
-					if strings.HasSuffix(line, delimiter) {
-						lines[i] = strings.TrimSuffix(line, delimiter)
-					}
+			for i, line := range lines {
+				if strings.HasSuffix(line, delimiter) {
+					lines[i] = strings.TrimSuffix(line, delimiter)
 				}
 			}
+			delimiter += "\n"
 		}
 		unique, _ := utils.GetUnique(lines)
 		fmt.Println(strings.Join(unique, delimiter))

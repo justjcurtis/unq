@@ -52,9 +52,9 @@ func GetDelimiter(lines []string) (string, error) {
 			}
 		}
 		if commaCount >= length-1 {
-			return ",\n", nil
+			return ",", nil
 		}
-		return "\n", nil
+		return "", nil
 	}
 
 	return "", errors.New("could not determine delimiter")
