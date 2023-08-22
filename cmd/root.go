@@ -11,6 +11,7 @@ import (
 
 	"github.com/justjcurtis/unq/utils"
 	"github.com/spf13/cobra"
+	"slices"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,8 +26,13 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 		showStats, _ := cmd.Flags().GetBool("stats")
 		showCount, _ := cmd.Flags().GetBool("count")
 		showPercent, _ := cmd.Flags().GetBool("percent")
+		order, _ := cmd.Flags().GetBool("order")
+		orderAz, _ := cmd.Flags().GetBool("order-az")
+		reverse, _ := cmd.Flags().GetBool("reverse")
+
 		lines := utils.GetStdIn()
 		length := len(lines)
+
 		delimiter, err := utils.GetDelimiter(lines)
 		if err != nil {
 			fmt.Println(err)
@@ -43,12 +49,29 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 			}
 			delimiter += "\n"
 		}
+
 		unique, m := utils.GetUnique(lines)
+
+		if order || orderAz {
+			if orderAz {
+				slices.Sort(unique)
+			} else {
+				slices.SortFunc(unique, func(a string, b string) int {
+					return m[a] - m[b]
+				})
+			}
+		}
+
+		if reverse {
+			slices.Reverse(unique)
+		}
+
 		if showStats {
 			fmt.Println("Entries:", len(lines))
 			fmt.Println("Unique entries:", len(unique))
 			fmt.Println("Duplicate entries:", len(lines)-len(unique))
 		}
+
 		if showCount || showPercent {
 			for _, k := range unique {
 				count := m[k]
@@ -88,4 +111,7 @@ func init() {
 	rootCmd.Flags().BoolP("stats", "s", false, "output stats about the unique set")
 	rootCmd.Flags().BoolP("count", "c", false, "output count of entires in the unique set")
 	rootCmd.Flags().BoolP("percent", "p", false, "output percentage of entires in the unique set")
+	rootCmd.Flags().BoolP("order", "o", false, "order the unique set by count")
+	rootCmd.Flags().BoolP("order-az", "O", false, "order the unique set alphabetically")
+	rootCmd.Flags().BoolP("reverse", "r", false, "reverse the order of the unique set")
 }
