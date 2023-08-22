@@ -9,13 +9,10 @@ func GetUnique(lines []string) ([]string, map[string]int) {
 	for _, line := range lines {
 		if _, ok := m[line]; ok {
 			m[line]++
-		} else {
-			m[line] = 1
+			continue
 		}
+		m[line] = 1
+		unique = append(unique, line)
 	}
-	for k := range m {
-		unique = append(unique, k)
-	}
-
 	return unique, m
 }
