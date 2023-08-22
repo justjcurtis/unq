@@ -50,7 +50,8 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 			fmt.Println("Duplicate entries:", len(lines)-len(unique))
 		}
 		if showCount || showPercent {
-			for k, count := range m {
+			for _, k := range unique {
+				count := m[k]
 				percentage := math.Round(float64(count)/float64(length)*10000) / 100
 				if showCount && showPercent {
 					fmt.Printf("%v: %v %v%%\n", k, count, percentage)
