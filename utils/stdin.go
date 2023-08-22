@@ -9,7 +9,6 @@ import (
 )
 
 func GetStdIn() []string {
-	// TODO: check if nothing is piped in && exit
 	var lines []string
 	in := bufio.NewScanner(os.Stdin)
 	stats, err := os.Stdin.Stat()
