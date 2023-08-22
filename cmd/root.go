@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/justjcurtis/unq/utils"
 	"github.com/spf13/cobra"
@@ -24,7 +25,19 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		println("\"" + delimiter + "\"")
+		if len(lines) == 1 {
+			lines = strings.Split(lines[0], delimiter)
+		} else {
+			if delimiter != "\n" {
+				for i, line := range lines {
+					if strings.HasSuffix(line, delimiter) {
+						lines[i] = strings.TrimSuffix(line, delimiter)
+					}
+				}
+			}
+		}
+		unique, _ := utils.GetUnique(lines)
+		fmt.Println(strings.Join(unique, delimiter))
 	},
 }
 
