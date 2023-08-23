@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func GetStdIn() string {
+func GetStdIn(trim bool) string {
 	var input string
 	in := bufio.NewScanner(os.Stdin)
 	stats, err := os.Stdin.Stat()
@@ -21,7 +21,10 @@ func GetStdIn() string {
 	}
 	i := 0
 	for in.Scan() {
-		text := strings.TrimSpace(in.Text())
+		text := in.Text()
+		if trim {
+			text = strings.TrimSpace(text)
+		}
 		if text == "" || text == "\n" {
 			continue
 		}

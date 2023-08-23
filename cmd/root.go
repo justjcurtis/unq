@@ -30,11 +30,13 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 		order, _ := cmd.Flags().GetBool("order")
 		orderAz, _ := cmd.Flags().GetBool("order-az")
 		reverse, _ := cmd.Flags().GetBool("reverse")
+		trim, _ := cmd.Flags().GetBool("trim")
+		trim = !trim
 		delimiterIn, _ := cmd.Flags().GetString("delemiter-in")
 		delimiterOut, _ := cmd.Flags().GetString("delemiter-out")
 
 		// get input
-		input := utils.GetStdIn()
+		input := utils.GetStdIn(trim)
 
 		// get delimiter
 		if delimiterIn == "" {
@@ -128,6 +130,7 @@ func init() {
 	rootCmd.Flags().BoolP("order", "o", false, "order the unique set by count")
 	rootCmd.Flags().BoolP("order-az", "O", false, "order the unique set alphabetically")
 	rootCmd.Flags().BoolP("reverse", "r", false, "reverse the order of the unique set")
+	rootCmd.Flags().BoolP("trim", "t", false, "trim whitespace from entries (true by default)")
 	rootCmd.Flags().StringP("delemiter-in", "d", "", "delimiter to use when splitting input")
 	rootCmd.Flags().StringP("delemiter-out", "D", "", "delimiter to use when outputting unique set")
 }
