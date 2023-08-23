@@ -24,16 +24,16 @@ or to compare two sets of strings to find the unique strings between them.
 unq can be used in many ways to analyze and manage sets of strings.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// get flags
-		showStats, _ := cmd.Flags().GetBool("stats")
 		showCount, _ := cmd.Flags().GetBool("count")
-		showPercent, _ := cmd.Flags().GetBool("percent")
-		order, _ := cmd.Flags().GetBool("order")
-		orderAz, _ := cmd.Flags().GetBool("order-az")
-		reverse, _ := cmd.Flags().GetBool("reverse")
-		trim, _ := cmd.Flags().GetBool("trim")
-		trim = !trim
 		delimiterIn, _ := cmd.Flags().GetString("delemiter-in")
 		delimiterOut, _ := cmd.Flags().GetString("delemiter-out")
+		order, _ := cmd.Flags().GetBool("order")
+		orderAz, _ := cmd.Flags().GetBool("order-az")
+		showPercent, _ := cmd.Flags().GetBool("percent")
+		reverse, _ := cmd.Flags().GetBool("reverse")
+		showStats, _ := cmd.Flags().GetBool("stats")
+		trim, _ := cmd.Flags().GetBool("trim")
+		trim = !trim
 
 		// get input
 		input := utils.GetStdIn(trim)
@@ -124,13 +124,13 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("stats", "s", false, "output stats about the unique set")
 	rootCmd.Flags().BoolP("count", "c", false, "output count of entires in the unique set")
-	rootCmd.Flags().BoolP("percent", "p", false, "output percentage of entires in the unique set")
-	rootCmd.Flags().BoolP("order", "o", false, "order the unique set by count")
-	rootCmd.Flags().BoolP("order-az", "O", false, "order the unique set alphabetically")
-	rootCmd.Flags().BoolP("reverse", "r", false, "reverse the order of the unique set")
-	rootCmd.Flags().BoolP("trim", "t", false, "trim whitespace from entries (true by default)")
 	rootCmd.Flags().StringP("delemiter-in", "d", "", "delimiter to use when splitting input")
 	rootCmd.Flags().StringP("delemiter-out", "D", "", "delimiter to use when outputting unique set")
+	rootCmd.Flags().BoolP("order", "o", false, "order the unique set by count")
+	rootCmd.Flags().BoolP("order-az", "O", false, "order the unique set alphabetically")
+	rootCmd.Flags().BoolP("percent", "p", false, "output percentage of entires in the unique set")
+	rootCmd.Flags().BoolP("reverse", "r", false, "reverse the order of the unique set")
+	rootCmd.Flags().BoolP("stats", "s", false, "output stats about the unique set")
+	rootCmd.Flags().BoolP("trim", "t", false, "trim whitespace from entries (true by default)")
 }
