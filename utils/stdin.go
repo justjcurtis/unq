@@ -6,10 +6,11 @@ package utils
 import (
 	"bufio"
 	"os"
+	"strings"
 )
 
-func GetStdIn() []string {
-	var lines []string
+func GetStdIn() string {
+	var input string
 	in := bufio.NewScanner(os.Stdin)
 	stats, err := os.Stdin.Stat()
 	if err != nil {
@@ -18,8 +19,17 @@ func GetStdIn() []string {
 	if stats.Size() == 0 {
 		os.Exit(0)
 	}
+	i := 0
 	for in.Scan() {
-		lines = append(lines, in.Text())
+		text := strings.TrimSpace(in.Text())
+		if text == "" || text == "\n" {
+			continue
+		}
+		if i > 0 {
+			input += "\n"
+		}
+		input += text
+		i++
 	}
-	return CleanUp(lines)
+	return input
 }

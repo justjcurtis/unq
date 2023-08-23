@@ -5,56 +5,52 @@ package utils
 
 import (
 	"errors"
-	"strings"
 )
 
-func GetDelimiter(lines []string) (string, error) {
-	length := len(lines)
-
-	if length == 0 {
-		return "", errors.New("no lines to parse")
+func GetDelimiter(input string) (string, error) {
+	if len(input) == 0 {
+		return "", errors.New("no input to parse")
 	}
 
-	if length == 1 {
-		commaCount := 0
-		spaceCount := 0
-		commaSpaceCount := 0
-		lastChar := ""
-		for _, char := range lines[0] {
-			if char == ',' {
-				commaCount++
-			}
-			if char == ' ' {
-				if lastChar == "," {
-					commaSpaceCount++
-				} else {
-					spaceCount++
-				}
-			}
-			lastChar = string(char)
+	commaCount := 0
+	spaceCount := 0
+	commaSpaceCount := 0
+	newlineCount := 0
+	commaNewlineCount := 0
+	lastChar := ""
+	for _, char := range input {
+		if char == ',' {
+			commaCount++
 		}
-		if commaCount > 0 {
-			if commaSpaceCount > 0 {
-				return ", ", nil
+		if char == '\n' {
+			newlineCount++
+			if lastChar == "," {
+				commaNewlineCount++
 			}
-			return ",", nil
 		}
-		if spaceCount > 0 {
-			return " ", nil
+		if char == ' ' {
+			if lastChar == "," {
+				commaSpaceCount++
+			} else {
+				spaceCount++
+			}
 		}
+		lastChar = string(char)
 	}
-
-	if length > 1 {
-		commaCount := 0
-		for _, line := range lines {
-			if strings.HasSuffix(line, ",") {
-				commaCount++
-			}
+	if newlineCount > 0 {
+		if commaNewlineCount > 0 {
+			return ",\n", nil
 		}
-		if commaCount >= length-1 {
-			return ",", nil
+		return "\n", nil
+	}
+	if commaCount > 0 {
+		if commaSpaceCount > 0 {
+			return ", ", nil
 		}
-		return "", nil
+		return ",", nil
+	}
+	if spaceCount > 0 {
+		return " ", nil
 	}
 
 	return "", errors.New("could not determine delimiter")

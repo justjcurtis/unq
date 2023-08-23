@@ -23,35 +23,46 @@ It can be used to create a unique set of strings from a file or stdin
 or to compare two sets of strings to find the unique strings between them.
 unq can be used in many ways to analyze and manage sets of strings.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// get flags
 		showStats, _ := cmd.Flags().GetBool("stats")
 		showCount, _ := cmd.Flags().GetBool("count")
 		showPercent, _ := cmd.Flags().GetBool("percent")
 		order, _ := cmd.Flags().GetBool("order")
 		orderAz, _ := cmd.Flags().GetBool("order-az")
 		reverse, _ := cmd.Flags().GetBool("reverse")
+		delimiterIn, _ := cmd.Flags().GetString("delemiter-in")
+		delimiterOut, _ := cmd.Flags().GetString("delemiter-out")
 
-		lines := utils.GetStdIn()
-		length := len(lines)
+		// get input
+		input := utils.GetStdIn()
 
-		delimiter, err := utils.GetDelimiter(lines)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		if length == 1 {
-			lines = strings.Split(lines[0], delimiter)
-			length = len(lines)
-		} else {
-			for i, line := range lines {
-				if strings.HasSuffix(line, delimiter) {
-					lines[i] = strings.TrimSuffix(line, delimiter)
-				}
+		// get delimiter
+		if delimiterIn == "" {
+			smartDelimiter, err := utils.GetDelimiter(input)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
 			}
-			delimiter += "\n"
+			delimiterIn = smartDelimiter
+		} else {
+			delimiterIn = strings.ReplaceAll(delimiterIn, "\\n", "\n")
+			delimiterIn = strings.ReplaceAll(delimiterIn, "\\t", "\t")
+		}
+		if delimiterOut == "" {
+			delimiterOut = delimiterIn
+		} else {
+			delimiterOut = strings.ReplaceAll(delimiterOut, "\\n", "\n")
+			delimiterOut = strings.ReplaceAll(delimiterOut, "\\t", "\t")
 		}
 
-		unique, m := utils.GetUnique(lines)
+		// split lines
+		entries := strings.Split(input, delimiterIn)
+		length := len(entries)
 
+		// get unique set
+		unique, m := utils.GetUnique(entries)
+
+		// sort unique set
 		if order || orderAz {
 			if orderAz {
 				slices.Sort(unique)
@@ -62,16 +73,19 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 			}
 		}
 
+		// reverse unique set
 		if reverse {
 			slices.Reverse(unique)
 		}
 
+		// output stats
 		if showStats {
-			fmt.Println("Entries:", len(lines))
+			fmt.Println("Entries:", len(entries))
 			fmt.Println("Unique entries:", len(unique))
-			fmt.Println("Duplicate entries:", len(lines)-len(unique))
+			fmt.Println("Duplicate entries:", len(entries)-len(unique))
 		}
 
+		// output unique set
 		if showCount || showPercent {
 			for _, k := range unique {
 				count := m[k]
@@ -85,7 +99,7 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 				}
 			}
 		} else {
-			fmt.Println(strings.Join(unique, delimiter))
+			fmt.Println(strings.Join(unique, delimiterOut))
 		}
 	},
 }
@@ -114,4 +128,6 @@ func init() {
 	rootCmd.Flags().BoolP("order", "o", false, "order the unique set by count")
 	rootCmd.Flags().BoolP("order-az", "O", false, "order the unique set alphabetically")
 	rootCmd.Flags().BoolP("reverse", "r", false, "reverse the order of the unique set")
+	rootCmd.Flags().StringP("delemiter-in", "d", "", "delimiter to use when splitting input")
+	rootCmd.Flags().StringP("delemiter-out", "D", "", "delimiter to use when outputting unique set")
 }
