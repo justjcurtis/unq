@@ -21,7 +21,10 @@ var rootCmd = &cobra.Command{
 
 It can be used to create a unique set of strings from a file or stdin
 or to compare two sets of strings to find the unique strings between them.
-unq can be used in many ways to analyze and manage sets of strings.`,
+unq can be used in many ways to analyze and manage sets of strings.
+
+unq will try to determine the delimiter of the input files automatically unless
+you specify one with the delimiter flags.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// get flags
 		showCount, _ := cmd.Flags().GetBool("count")
