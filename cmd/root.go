@@ -37,7 +37,9 @@ unq can be used in many ways to analyze and manage sets of strings.`,
 
 		// get input
 		input := utils.GetStdIn(trim)
-
+		if len(input) == 0 {
+			os.Exit(1)
+		}
 		// get delimiter
 		if delimiterIn == "" {
 			smartDelimiter, err := utils.GetDelimiter(input)

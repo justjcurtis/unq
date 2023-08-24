@@ -17,7 +17,7 @@ func GetStdIn(trim bool) string {
 		panic(err)
 	}
 	if stats.Size() == 0 {
-		os.Exit(0)
+		return ""
 	}
 	i := 0
 	for in.Scan() {
